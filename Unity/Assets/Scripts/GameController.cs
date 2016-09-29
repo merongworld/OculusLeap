@@ -8,12 +8,16 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour
 {
+    private List<Block> blocks = null;
+
     void Start()
     {
-
+        blocks = new List<Block>();
+        blocks.Add(new Block());
     }
 
     void Update()
