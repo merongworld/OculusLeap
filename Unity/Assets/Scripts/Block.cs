@@ -17,7 +17,7 @@ public class Block : ScriptableObject
     public Vector3 Scale { get; set; }
 
     public GameObject GameObject { get; set; }
-    public List<GameObject> ChildGameObjects { get; set; }
+    public Dictionary<string, GameObject> ChildGameObjects { get; set; }
 
     public Block()
     {
@@ -26,7 +26,7 @@ public class Block : ScriptableObject
         Scale = new Vector3(1, 1, 1);
 
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
-        ChildGameObjects = new List<GameObject>();
+        ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
     }
 
@@ -37,7 +37,7 @@ public class Block : ScriptableObject
         Scale = new Vector3(1, 1, 1);
 
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
-        ChildGameObjects = new List<GameObject>();
+        ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
     }
 
@@ -45,6 +45,9 @@ public class Block : ScriptableObject
     {
         Transform transform = GameObject.transform;
         for (int i = 0; i < transform.childCount; i++)
-            ChildGameObjects.Add(transform.GetChild(i).gameObject);
+        {
+            GameObject childGameObject = transform.GetChild(i).gameObject;
+            ChildGameObjects.Add(childGameObject.name.ToLower(), childGameObject);
+        }
     }
 }
