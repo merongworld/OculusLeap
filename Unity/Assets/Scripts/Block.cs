@@ -15,14 +15,19 @@ public class Block : ScriptableObject
     public BlockType Type { get; set; }
     public Vector3 Position { get; set; }
     public Vector3 Scale { get; set; }
+
     public GameObject GameObject { get; set; }
+    public List<GameObject> ChildGameObjects { get; set; }
 
     public Block()
     {
         Type = BlockType.Grass;
         Position = new Vector3();
         Scale = new Vector3(1, 1, 1);
+
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
+        ChildGameObjects = new List<GameObject>();
+        AddChildGameObjects();
     }
 
     public Block(BlockType type)
@@ -30,6 +35,16 @@ public class Block : ScriptableObject
         Type = type;
         Position = new Vector3();
         Scale = new Vector3(1, 1, 1);
+
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
+        ChildGameObjects = new List<GameObject>();
+        AddChildGameObjects();
+    }
+
+    private void AddChildGameObjects()
+    {
+        Transform transform = GameObject.transform;
+        for (int i = 0; i < transform.childCount; i++)
+            ChildGameObjects.Add(transform.GetChild(i).gameObject);
     }
 }
