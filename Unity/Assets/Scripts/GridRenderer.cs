@@ -35,7 +35,7 @@ public class GridRenderer : MonoBehaviour
         DrawGrid(gridSize);
     }
 
-    void DrawGrid(int size)
+    private void DrawGrid(int size)
     {
         for (var i = -size; i <= size; i++)
         {
@@ -75,7 +75,7 @@ public class GridRenderer : MonoBehaviour
         }
     }
 
-    void DrawLine(Vector3 start, Vector3 end)
+    private void DrawLine(Vector3 start, Vector3 end)
     {
         GL.PushMatrix();
         {
