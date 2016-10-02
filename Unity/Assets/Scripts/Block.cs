@@ -59,13 +59,14 @@ public class Block : ScriptableObject
         transform.position = position;
     }
 
-    // Scale vector components must have integer values
+    // Scale vector components must have positive integer values
     public void Scale(Vector3 scale)
     {
-        this.scale = scale;
+        Vector3 truncatedScale = MathUtils.truncate(scale);
+        if (MathUtils.hasZero(truncatedScale)) return;
 
         Transform transform = GameObject.GetComponent<Transform>();
-        transform.localScale = scale * 0.1f;
+        transform.localScale = truncatedScale * 0.1f;
 
         // Update texture coordinates
     }
@@ -84,25 +85,105 @@ public class Block : ScriptableObject
     {
         switch (type)
         {
-            case BlockType.Bookshelf: break;
-            case BlockType.Brick: break;
-            case BlockType.Chest: break;
-            case BlockType.CraftingTable: break;
-            case BlockType.Diamond: break;
-            case BlockType.Dirt: break;
-            case BlockType.Grass: break;
-            case BlockType.Hay: break;
-            case BlockType.Ice: break;
-            case BlockType.Log: break;
-            case BlockType.Planks: break;
-            case BlockType.Pumpkin: break;
-            case BlockType.Stone: break;
-            case BlockType.StoneBrick: break;
-            case BlockType.TNT: break;
-            case BlockType.Wool: break;
+            case BlockType.Bookshelf: SetBookshelfMaterials(); break;
+            case BlockType.Brick: SetBrickMaterials(); break;
+            case BlockType.Chest: SetChestMaterials(); break;
+            case BlockType.CraftingTable: SetCraftingTableMaterials(); break;
+            case BlockType.Diamond: SetDiamondMaterials(); break;
+            case BlockType.Dirt: SetDirtMaterials(); break;
+            case BlockType.Grass: SetGrassMaterials(); break;
+            case BlockType.Hay: SetHayMaterials(); break;
+            case BlockType.Ice: SetIceMaterials(); break;
+            case BlockType.Log: SetLogMaterials(); break;
+            case BlockType.Planks: SetPlanksMaterials(); break;
+            case BlockType.Pumpkin: SetPumpkinMaterials(); break;
+            case BlockType.Stone: SetStoneMaterials(); break;
+            case BlockType.StoneBrick: SetStoneBrickMaterials(); break;
+            case BlockType.TNT: SetTNTMaterials(); break;
+            case BlockType.Wool: SetWoolMaterials(); break;
             default: break;
         }
 
         // Update texture coordinates
+    }
+
+    private void SetBookshelfMaterials()
+    {
+
+    }
+
+    private void SetBrickMaterials()
+    {
+
+    }
+
+    private void SetChestMaterials()
+    {
+
+    }
+
+    private void SetCraftingTableMaterials()
+    {
+
+    }
+
+    private void SetDiamondMaterials()
+    {
+
+    }
+
+    private void SetDirtMaterials()
+    {
+
+    }
+
+    private void SetGrassMaterials()
+    {
+
+    }
+
+    private void SetHayMaterials()
+    {
+
+    }
+
+    private void SetIceMaterials()
+    {
+
+    }
+
+    private void SetLogMaterials()
+    {
+
+    }
+
+    private void SetPlanksMaterials()
+    {
+
+    }
+
+    private void SetPumpkinMaterials()
+    {
+
+    }
+
+    private void SetStoneMaterials()
+    {
+
+    }
+
+    private void SetStoneBrickMaterials()
+    {
+
+    }
+
+    private void SetTNTMaterials()
+    {
+
+    }
+
+    private void SetWoolMaterials()
+    {
+
     }
 }
