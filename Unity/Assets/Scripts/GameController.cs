@@ -24,4 +24,14 @@ public class GameController : MonoBehaviour
     {
 
     }
+
+    private void MoveBlock(Block block, Vector3 position)
+    {
+        block.Position = position;
+    }
+
+    private void ScaleBlock(Block block, Vector3 scale)
+    {
+        block.Scale = scale;
+    }
 }
