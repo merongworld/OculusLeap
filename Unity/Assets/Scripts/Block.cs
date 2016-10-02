@@ -12,18 +12,18 @@ using System.Collections.Generic;
 
 public class Block : ScriptableObject
 {
-    public BlockType Type { get; private set; }
-    public Vector3 Position { get; set; }
-    public Vector3 Scale { get; set; }
+    private Vector3 position;
+    private Vector3 scale;
 
+    public BlockType Type { get; private set; }
     public GameObject GameObject { get; set; }
     public Dictionary<string, GameObject> ChildGameObjects { get; set; }
 
     public Block()
     {
         Type = BlockType.Grass;
-        Position = new Vector3();
-        Scale = new Vector3(1, 1, 1);
+        position = new Vector3();
+        scale = new Vector3(1, 1, 1);
 
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
@@ -33,8 +33,8 @@ public class Block : ScriptableObject
     public Block(BlockType type)
     {
         Type = type;
-        Position = new Vector3();
-        Scale = new Vector3(1, 1, 1);
+        position = new Vector3();
+        scale = new Vector3(1, 1, 1);
 
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
@@ -48,6 +48,30 @@ public class Block : ScriptableObject
         {
             GameObject childGameObject = transform.GetChild(i).gameObject;
             ChildGameObjects.Add(childGameObject.name.ToLower(), childGameObject);
+        }
+    }
+
+    public Vector3 Position
+    {
+        get { return position; }
+        set
+        {
+            position = value;
+
+            Transform transform = GameObject.GetComponent<Transform>();
+            transform.position = position;
+        }
+    }
+
+    public Vector3 Scale
+    {
+        get { return scale; }
+        set
+        {
+            scale = value;
+
+            Transform transform = GameObject.GetComponent<Transform>();
+            transform.localScale = scale * 0.1f;
         }
     }
 
