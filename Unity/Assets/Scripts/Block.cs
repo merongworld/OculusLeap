@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 public class Block : ScriptableObject
 {
-    public BlockType Type { get; set; }
+    public BlockType Type { get; private set; }
     public Vector3 Position { get; set; }
     public Vector3 Scale { get; set; }
 
@@ -49,5 +49,10 @@ public class Block : ScriptableObject
             GameObject childGameObject = transform.GetChild(i).gameObject;
             ChildGameObjects.Add(childGameObject.name.ToLower(), childGameObject);
         }
+    }
+
+    public void SetType(BlockType type)
+    {
+        Type = type;
     }
 }
