@@ -13,6 +13,8 @@ using System.Collections.Generic;
 public class Block : ScriptableObject
 {
     private BlockType type;
+    private Vector3 position;
+    private Vector3 scale;
 
     public GameObject GameObject { get; set; }
     public Dictionary<string, GameObject> ChildGameObjects { get; set; }
@@ -51,17 +53,56 @@ public class Block : ScriptableObject
 
     public void Move(Vector3 position)
     {
+        this.position = position;
 
+        Transform transform = GameObject.GetComponent<Transform>();
+        transform.position = position;
     }
 
+    // Scale vector components must have integer values
     public void Scale(Vector3 scale)
     {
+        this.scale = scale;
 
+        Transform transform = GameObject.GetComponent<Transform>();
+        transform.localScale = scale * 0.1f;
+
+        // Update texture coordinates
     }
 
     public BlockType Type
     {
         get { return type; }
-        set { type = value; }
+        set
+        {
+            type = value;
+            SetMaterials();
+        }
+    }
+
+    private void SetMaterials()
+    {
+        switch (type)
+        {
+            case BlockType.Bookshelf: break;
+            case BlockType.Brick: break;
+            case BlockType.Chest: break;
+            case BlockType.CraftingTable: break;
+            case BlockType.Diamond: break;
+            case BlockType.Dirt: break;
+            case BlockType.Grass: break;
+            case BlockType.Hay: break;
+            case BlockType.Ice: break;
+            case BlockType.Log: break;
+            case BlockType.Planks: break;
+            case BlockType.Pumpkin: break;
+            case BlockType.Stone: break;
+            case BlockType.StoneBrick: break;
+            case BlockType.TNT: break;
+            case BlockType.Wool: break;
+            default: break;
+        }
+
+        // Update texture coordinates
     }
 }
