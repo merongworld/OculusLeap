@@ -17,11 +17,13 @@ public class GameController : MonoBehaviour
     void Start()
     {
         blocks = new List<Block>();
+        AddBlock(BlockType.Grass);
     }
 
     void Update()
     {
-
+        if (blocks.Count > 0)
+            DeleteBlock(blocks[0]);
     }
 
     public void AddBlock(BlockType type)
@@ -40,16 +42,16 @@ public class GameController : MonoBehaviour
 
     public void MoveBlock(Block block, Vector3 position)
     {
-        block.Position = position;
+
     }
 
     public void ScaleBlock(Block block, Vector3 scale)
     {
-        block.Scale = scale;
+
     }
 
     public void SetBlockType(Block block, BlockType type)
     {
-        block.SetType(type);
+
     }
 }
