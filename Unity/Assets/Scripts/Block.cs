@@ -12,13 +12,14 @@ using System.Collections.Generic;
 
 public class Block : ScriptableObject
 {
-    public BlockType Type { get; set; }
+    private BlockType type;
+
     public GameObject GameObject { get; set; }
     public Dictionary<string, GameObject> ChildGameObjects { get; set; }
 
     public Block()
     {
-        Type = BlockType.Grass;
+        type = BlockType.Grass;
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
@@ -26,7 +27,7 @@ public class Block : ScriptableObject
 
     public Block(BlockType type)
     {
-        Type = type;
+        this.type = type;
 
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
@@ -46,5 +47,21 @@ public class Block : ScriptableObject
             GameObject childGameObject = transform.GetChild(i).gameObject;
             ChildGameObjects.Add(childGameObject.name.ToLower(), childGameObject);
         }
+    }
+
+    public void Move(Vector3 position)
+    {
+
+    }
+
+    public void Scale(Vector3 scale)
+    {
+
+    }
+
+    public BlockType Type
+    {
+        get { return type; }
+        set { type = value; }
     }
 }
