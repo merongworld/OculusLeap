@@ -17,7 +17,6 @@ public class GameController : MonoBehaviour
     void Start()
     {
         blocks = new List<Block>();
-        blocks.Add(new Block());
     }
 
     void Update()
@@ -25,13 +24,32 @@ public class GameController : MonoBehaviour
 
     }
 
-    private void MoveBlock(Block block, Vector3 position)
+    public void AddBlock(BlockType type)
+    {
+        Block block = new Block(type);
+        blocks.Add(block);
+    }
+
+    public void DeleteBlock(Block block)
+    {
+        if (block == null) return;
+        else if (blocks.Contains(block)) blocks.Remove(block);
+
+        Destroy(block);
+    }
+
+    public void MoveBlock(Block block, Vector3 position)
     {
         block.Position = position;
     }
 
-    private void ScaleBlock(Block block, Vector3 scale)
+    public void ScaleBlock(Block block, Vector3 scale)
     {
         block.Scale = scale;
+    }
+
+    public void SetBlockType(Block block, BlockType type)
+    {
+        block.SetType(type);
     }
 }
