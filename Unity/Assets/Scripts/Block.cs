@@ -21,19 +21,18 @@ public class Block : ScriptableObject
 
     public Block()
     {
-        type = BlockType.Grass;
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
+        Type = BlockType.Grass;
     }
 
     public Block(BlockType type)
     {
-        this.type = type;
-
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
+        Type = type;
     }
 
     private void OnDestroy()
@@ -79,6 +78,17 @@ public class Block : ScriptableObject
             type = value;
             SetMaterials();
         }
+    }
+
+    private Material LoadMaterial(string path)
+    {
+        return Resources.Load(path) as Material;
+    }
+
+    private void SetMaterial(GameObject gameObject, string path)
+    {
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        renderer.material = LoadMaterial(path);
     }
 
     private void SetMaterials()
@@ -139,7 +149,12 @@ public class Block : ScriptableObject
 
     private void SetGrassMaterials()
     {
-
+        SetMaterial(ChildGameObjects["top"], "block_grass_top");
+        SetMaterial(ChildGameObjects["bottom"], "block_dirt");
+        SetMaterial(ChildGameObjects["front"], "block_grass_side");
+        SetMaterial(ChildGameObjects["back"], "block_grass_side");
+        SetMaterial(ChildGameObjects["left"], "block_grass_side");
+        SetMaterial(ChildGameObjects["right"], "block_grass_side");
     }
 
     private void SetHayMaterials()
