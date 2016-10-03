@@ -21,6 +21,9 @@ public class Block : ScriptableObject
 
     public Block()
     {
+        position = new Vector3(0, 0, 0);
+        scale = new Vector3(1, 1, 1);
+
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
@@ -29,6 +32,9 @@ public class Block : ScriptableObject
 
     public Block(BlockType type)
     {
+        position = new Vector3(0, 0, 0);
+        scale = new Vector3(1, 1, 1);
+
         GameObject = Instantiate(Resources.Load("Block")) as GameObject;
         ChildGameObjects = new Dictionary<string, GameObject>();
         AddChildGameObjects();
@@ -67,7 +73,8 @@ public class Block : ScriptableObject
         Transform transform = GameObject.GetComponent<Transform>();
         transform.localScale = truncatedScale * 0.1f;
 
-        UpdateTextureCoordinates();
+        this.scale = truncatedScale;
+        UpdateTextureCoords();
     }
 
     public BlockType Type
@@ -80,9 +87,41 @@ public class Block : ScriptableObject
         }
     }
 
-    private void UpdateTextureCoordinates()
+    private void UpdateTextureCoords()
     {
-        
+        UpdateTextureCoordsXZ(ChildGameObjects["top"]);
+        UpdateTextureCoordsXZ(ChildGameObjects["bottom"]);
+        UpdateTextureCoordsXY(ChildGameObjects["front"]);
+        UpdateTextureCoordsXY(ChildGameObjects["back"]);
+        UpdateTextureCoordsZY(ChildGameObjects["left"]);
+        UpdateTextureCoordsZY(ChildGameObjects["right"]);
+    }
+
+    private void UpdateTextureCoordsXZ(GameObject gameObject)
+    {
+        Material material = GetMaterial(gameObject);
+        float scaleX = scale.x;
+        float scaleY = scale.z;
+
+        material.SetTextureScale("_MainTex", new Vector2(scaleX, scaleY));
+    }
+
+    private void UpdateTextureCoordsXY(GameObject gameObject)
+    {
+        Material material = GetMaterial(gameObject);
+        float scaleX = scale.x;
+        float scaleY = scale.y;
+
+        material.SetTextureScale("_MainTex", new Vector2(scaleX, scaleY));
+    }
+
+    private void UpdateTextureCoordsZY(GameObject gameObject)
+    {
+        Material material = GetMaterial(gameObject);
+        float scaleX = scale.y;
+        float scaleY = scale.z;
+
+        material.SetTextureScale("_MainTex", new Vector2(scaleX, scaleY));
     }
 
     private Material LoadMaterial(string path)
@@ -125,7 +164,7 @@ public class Block : ScriptableObject
             default: break;
         }
 
-        UpdateTextureCoordinates();
+        UpdateTextureCoords();
     }
 
     private void SetBookshelfMaterials()
