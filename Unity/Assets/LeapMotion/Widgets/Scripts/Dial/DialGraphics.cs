@@ -104,10 +104,22 @@ namespace LMWidgets
       int index = -1;
       
 	  index = DialLabels.IndexOf( valueString);
-
       if (index == -1) {
-        throw new System.ArgumentException("valueString \"" + valueString + "\" is not a valid label.");
-      }
+		try {
+			index = Convert.ToInt32(valueString);
+			if (index < 0 || DialLabels.Count <= index) {
+				throw new System.ArgumentException(String.Format("Numeric index '{0}' -> {1} is not an index of any label.", valueString, index));
+			}
+		}
+		catch (FormatException) {
+			index = -1;
+			throw new System.ArgumentException(String.Format("The {0} value '{1}' is not in a recognizable format.", valueString.GetType().Name, valueString));
+		}
+		catch (OverflowException) {
+			index = -1;
+			throw new System.ArgumentException(String.Format("{0} is outside the range of the Int32 type.", valueString));
+		} 
+	  }
 
       return index;
 	}
