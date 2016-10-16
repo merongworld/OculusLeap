@@ -108,7 +108,7 @@ namespace LMWidgets
     /// <returns></returns>
     private bool IsHand(Collider collider)
     {
-      return collider.transform.parent && collider.transform.parent.parent && collider.transform.parent.parent.GetComponent<HandModel>();
+      return collider.transform.parent && collider.transform.parent.parent && collider.transform.parent.parent.GetComponent<Leap.Unity.HandModel>();
     }
 
     /// <summary>

@@ -126,7 +126,7 @@ namespace LMWidgets
 
     private bool IsHand (Collider other)
     {
-      return other.transform.parent && other.transform.parent.parent && other.transform.parent.parent.GetComponent<HandModel> ();
+      return other.transform.parent && other.transform.parent.parent && other.transform.parent.parent.GetComponent<Leap.Unity.HandModel> ();
     }
 
     void OnTriggerEnter (Collider other)
