@@ -54,6 +54,14 @@ public class Block : ScriptableObject
             GameObject childGameObject = transform.GetChild(i).gameObject;
             ChildGameObjects.Add(childGameObject.name.ToLower(), childGameObject);
         }
+
+        SetChildGameObjectActive("cube", false);
+    }
+
+    public void SetChildGameObjectActive(string key, bool value)
+    {
+        if (ChildGameObjects.ContainsKey(key))
+            ChildGameObjects[key].SetActive(value);
     }
 
     public void Move(Vector3 position)
