@@ -13,8 +13,11 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour
 {
     private List<Block> blocks = null;
+    private Block gazedBlock = null;
     private Block selectedBlock = null;
+
     private GameObject sphere = null;
+    private float countdown = 0.0f;
 
     void Start()
     {
@@ -35,6 +38,8 @@ public class GameController : MonoBehaviour
             RaycastHit hit;
             GameObject hitObject;
 
+            float timeToSelect = 2.0f;
+
             if (Physics.Raycast(ray, out hit))
             {
                 hitObject = hit.collider.gameObject;
@@ -42,19 +47,36 @@ public class GameController : MonoBehaviour
 
                 if (blockIndex >= 0)
                 {
-                    selectedBlock = blocks[blockIndex];
-                    selectedBlock.SetChildGameObjectActive("cube", true);
+                    if (gazedBlock != null && countdown < 0.0f)
+                    {
+                        selectedBlock = gazedBlock;
+                        countdown = 0.0f;
+                        sphere.SetActive(false);
+
+                        gazedBlock.SetChildGameObjectActive("cube", false);
+                        gazedBlock = null;
+                    }
+                    else if (gazedBlock != null)
+                    {
+                        countdown -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        gazedBlock = blocks[blockIndex];
+                        gazedBlock.SetChildGameObjectActive("cube", true);
+                        countdown = timeToSelect;
+                    }
                 }
-                else if (selectedBlock != null)
+                else if (gazedBlock != null)
                 {
-                    selectedBlock.SetChildGameObjectActive("cube", false);
-                    selectedBlock = null;
+                    gazedBlock.SetChildGameObjectActive("cube", false);
+                    gazedBlock = null;
                 }
             }
-            else if (selectedBlock != null)
+            else if (gazedBlock != null)
             {
-                selectedBlock.SetChildGameObjectActive("cube", false);
-                selectedBlock = null;
+                gazedBlock.SetChildGameObjectActive("cube", false);
+                gazedBlock = null;
             }
         }
     }
