@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class BlockMGR : MonoBehaviour {
 
     List<GameObject> block_prefab;
+    List<GameObject> blocks;
 
     // Use this for initialization
     void Start()
@@ -14,9 +15,12 @@ public class BlockMGR : MonoBehaviour {
         block_prefab.Add(Resources.Load("DirtBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("GrassBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("WoolBlock", typeof(GameObject)) as GameObject);
+
+        blocks = new List<GameObject>();
     }
 
     public void onClickEvent(int listnum) {
         GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.3f, 0.3f), Quaternion.identity) as GameObject;
+        blocks.Add(obj);
     }
 }
