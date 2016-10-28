@@ -8,11 +8,13 @@ using UnityEngine.UI;
 
 public class CanvasMGR : MonoBehaviour {
 
-    public Boolean UI_Mode;
+    private Boolean UI_Mode;
 
-    [Header("References")]
+    [Header("Hands")]
     public CapsuleHand left_hand;
     public CapsuleHand right_hand;
+
+    [Header("Panels")]
     public GameObject block_panel;
     public GameObject geometry_panel;
 
