@@ -14,11 +14,13 @@ public class CanvasMGR : MonoBehaviour {
     public CapsuleHand left_hand;
     public CapsuleHand right_hand;
     public GameObject block_panel;
-  
+    public GameObject geometry_panel;
+
     // Use this for initialization
     void Start () {
         UI_Mode = false;
         block_panel.SetActive(false);
+        geometry_panel.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -27,6 +29,10 @@ public class CanvasMGR : MonoBehaviour {
         if(Vector3.Dot(UnityVectorExtension.ToVector3(left_hand.GetLeapHand().PalmNormal), upNormal) > 0 && Vector3.Dot(UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmNormal), upNormal) > 0 && right_hand.GetLeapHand().GrabStrength > 0.9)
         {
             block_panel.SetActive(true);
+        }
+        else if(left_hand.GetLeapHand().GrabStrength > 0.9)
+        {
+            geometry_panel.SetActive(true);
         }
     }
 }
