@@ -5,6 +5,14 @@ using UnityEngine.UI;
 using Leap;
 using Leap.Unity;
 
+public enum GrabMode
+{
+    Empty,
+    LeftOnly,
+    RightOnly,
+    Both
+}
+
 public class BlockMGR : MonoBehaviour {
 
     List<GameObject> block_prefab;
@@ -14,6 +22,8 @@ public class BlockMGR : MonoBehaviour {
     [Header("Reference")]
     public CapsuleHand left_hand;
     public CapsuleHand right_hand;
+
+    private GrabMode grabMode = GrabMode.Empty;
 
     // Use this for initialization
     void Start()
@@ -36,6 +46,21 @@ public class BlockMGR : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             hitObject = hit.collider.gameObject;
+        }
+
+        switch(grabMode)
+        {
+            case GrabMode.Empty:
+                break;
+
+            case GrabMode.LeftOnly:
+                break;
+
+            case GrabMode.RightOnly:
+                break;
+
+            case GrabMode.Both:
+                break;
         }
 
         if (left_hand.GetLeapHand().GrabStrength > 0.9 || right_hand.GetLeapHand().GrabStrength > 0.9)
