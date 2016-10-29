@@ -46,6 +46,17 @@ public class BlockMGR : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             hitObject = hit.collider.gameObject;
+
+            for (int i = 0; i <hitObject.transform.childCount; i++)
+            {
+                GameObject childObj = hitObject.transform.GetChild(i).gameObject;
+                
+                if(childObj.name == "Cube")
+                {
+                    childObj.SetActive(true);
+                }
+            }
+
             Debug.Log(hitObject);
         }
 
@@ -89,6 +100,8 @@ public class BlockMGR : MonoBehaviour {
 
     public void onClickEvent(int listnum) {
         GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.3f, 0.5f), Quaternion.identity) as GameObject;
+        Debug.Log(obj.transform.childCount);
+
         obj.transform.parent = gameObject.transform;
         blocks.Add(obj);
     }
