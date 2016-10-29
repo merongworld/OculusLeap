@@ -46,6 +46,7 @@ public class BlockMGR : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             hitObject = hit.collider.gameObject;
+            Debug.Log(hitObject);
         }
 
         switch(grabMode)
@@ -69,8 +70,19 @@ public class BlockMGR : MonoBehaviour {
                 hitObject.gameObject.AddComponent<SphereCollider>();
                 Destroy(hitObject.gameObject.GetComponent<BoxCollider>());
             }
-            if (Vector3.Distance(hitObject.gameObject.transform.position, UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmPosition)) < 0.1f) { 
-                hitObject.transform.position = UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmPosition) + UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmNormal * 0.06f);
+            if (Vector3.Distance(hitObject.gameObject.transform.position, UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmPosition)) < 0.1f)
+            {
+                Vector3 newPosition = UnityVectorExtension.ToVector3(
+                    right_hand.GetLeapHand().PalmPosition) + UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmNormal * 0.06f);
+
+               
+                hitObject.transform.position = new Vector3(truncate(newPosition.x),
+                       truncate(newPosition.y),
+                       truncate(newPosition.z));
+
+                Debug.Log(hitObject.transform.position.x + " " +
+                                   hitObject.transform.position.y + " " +
+                                   hitObject.transform.position.z);
             }
         }
     }
@@ -79,5 +91,11 @@ public class BlockMGR : MonoBehaviour {
         GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.8f, 0.5f), Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform;
         blocks.Add(obj);
+    }
+
+    public float truncate(float target)
+    {
+        int temp = (int)(target * 20);
+        return (float)(temp) / 20;
     }
 }
