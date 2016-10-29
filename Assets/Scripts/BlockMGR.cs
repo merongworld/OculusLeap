@@ -49,7 +49,12 @@ public class BlockMGR : MonoBehaviour {
             Debug.Log(hitObject);
         }
 
-        switch(grabMode)
+        if (left_hand.GetLeapHand().GrabStrength > 0.9 && right_hand.GetLeapHand().GrabStrength < 0.9) grabMode = GrabMode.LeftOnly;
+        else if (left_hand.GetLeapHand().GrabStrength < 0.9 && right_hand.GetLeapHand().GrabStrength > 0.9) grabMode = GrabMode.RightOnly;
+        else if (left_hand.GetLeapHand().GrabStrength > 0.9 && right_hand.GetLeapHand().GrabStrength > 0.9) grabMode = GrabMode.Both;
+        else grabMode = GrabMode.Empty;
+
+        switch (grabMode)
         {
             case GrabMode.Empty:
                 break;
@@ -58,37 +63,32 @@ public class BlockMGR : MonoBehaviour {
                 break;
 
             case GrabMode.RightOnly:
+                Debug.Log("right");
+                if (Vector3.Distance(hitObject.gameObject.transform.position, UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmPosition)) < 0.15f)
+                {
+                    Vector3 newPosition = UnityVectorExtension.ToVector3(
+                        right_hand.GetLeapHand().PalmPosition) + UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmNormal * 0.03f);
+
+                    Debug.Log("before : " + newPosition);
+
+
+                    hitObject.transform.position = new Vector3(truncate(newPosition.x),
+                           truncate(newPosition.y),
+                           truncate(newPosition.z));
+
+                    Debug.Log("after : " + hitObject.transform.position.x + " " +
+                                       hitObject.transform.position.y + " " +
+                                       hitObject.transform.position.z);
+                }
                 break;
 
             case GrabMode.Both:
                 break;
         }
-
-        if (left_hand.GetLeapHand().GrabStrength > 0.9 || right_hand.GetLeapHand().GrabStrength > 0.9)
-        {
-            if(hitObject.gameObject.GetComponent<SphereCollider>() == null) { 
-                hitObject.gameObject.AddComponent<SphereCollider>();
-                Destroy(hitObject.gameObject.GetComponent<BoxCollider>());
-            }
-            if (Vector3.Distance(hitObject.gameObject.transform.position, UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmPosition)) < 0.1f)
-            {
-                Vector3 newPosition = UnityVectorExtension.ToVector3(
-                    right_hand.GetLeapHand().PalmPosition) + UnityVectorExtension.ToVector3(right_hand.GetLeapHand().PalmNormal * 0.06f);
-
-               
-                hitObject.transform.position = new Vector3(truncate(newPosition.x),
-                       truncate(newPosition.y),
-                       truncate(newPosition.z));
-
-                Debug.Log(hitObject.transform.position.x + " " +
-                                   hitObject.transform.position.y + " " +
-                                   hitObject.transform.position.z);
-            }
-        }
     }
 
     public void onClickEvent(int listnum) {
-        GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.8f, 0.5f), Quaternion.identity) as GameObject;
+        GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.3f, 0.5f), Quaternion.identity) as GameObject;
         obj.transform.parent = gameObject.transform;
         blocks.Add(obj);
     }
