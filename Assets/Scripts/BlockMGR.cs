@@ -20,7 +20,7 @@ public class BlockMGR : MonoBehaviour {
     }
 
     public void onClickEvent(int listnum) {
-        GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.3f, 0.3f), Quaternion.identity) as GameObject;
+        GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.8f, 0.5f), Quaternion.identity) as GameObject;
         blocks.Add(obj);
     }
 }
