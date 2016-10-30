@@ -13,7 +13,8 @@ public enum GrabMode
     Both
 }
 
-public class BlockMGR : MonoBehaviour {
+public class BlockMGR : MonoBehaviour
+{
 
     List<GameObject> block_prefab;
     List<GameObject> blocks;
@@ -35,6 +36,12 @@ public class BlockMGR : MonoBehaviour {
 
     private GrabMode grabMode;
 
+    // Timer to track focus
+    public float timeToSelect = 2.0f;
+    private float countdown;
+
+    GameObject geometryTargetObj;
+
     // Use this for initialization
     void Start()
     {
@@ -44,13 +51,14 @@ public class BlockMGR : MonoBehaviour {
         geometry_panel.SetActive(false);
         toggle_panel.SetActive(false);
 
-        block_prefab = new List<GameObject>(); 
+        block_prefab = new List<GameObject>();
         block_prefab.Add(Resources.Load("BookShelfBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("DirtBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("GrassBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("WoolBlock", typeof(GameObject)) as GameObject);
 
         blocks = new List<GameObject>();
+        toggle_panel.SetActive(false);
     }
 
     void Update()
@@ -68,7 +76,7 @@ public class BlockMGR : MonoBehaviour {
         }
         else if (left_hand.GetLeapHand().GrabStrength > 0.9)
         {
-            geometry_panel.SetActive(true);
+            // geometry_panel.SetActive(true);
         }
 
         if (left_hand.GetLeapHand().GrabStrength > 0.95 && right_hand.GetLeapHand().GrabStrength > 0.95) grabMode = GrabMode.Both;
@@ -92,13 +100,43 @@ public class BlockMGR : MonoBehaviour {
 
                     childObj = hitObject.transform.GetChild(6).gameObject;
                     if (childObj.name == "Cube")
-                        childObj.SetActive(true);
+                    {
+                        if (!childObj.activeSelf)
+                        {
+                            countdown = timeToSelect;
+                            childObj.SetActive(true);
+                        }
+                        else
+                        {
+                            countdown -= Time.deltaTime;
+
+                            if (countdown < 0.0f)
+                            {
+                                toggle_panel.SetActive(true);
+                                toggle_panel.transform.position = new Vector3(0, 0.3f, 0.45f);
+                                toggle_panel.transform.parent = hitObject.transform;
+
+                                geometry_panel.SetActive(false);
+
+                                GameObject toggleObj = toggle_panel.transform.GetChild(0).GetChild(0).gameObject;
+                                Toggle toggle = toggleObj.GetComponent<Toggle>();
+                                toggle.isOn = false;
+
+                                countdown = timeToSelect;
+                            }
+                        }
+                    }
                 }
-                else if(hitObject != null)
+                else if (hitObject != null)
                 {
                     hitObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                    childObj = hitObject.transform.GetChild(6).gameObject;
                     childObj.SetActive(false);
                     hitObject = null;
+
+                    toggle_panel.SetActive(false);
+                    toggle_panel.transform.parent = GameObject.Find("Canvas").transform;
+                    countdown = timeToSelect;
                 }
 
                 break;
@@ -134,14 +172,53 @@ public class BlockMGR : MonoBehaviour {
         }
     }
 
-    public void onClickEvent(int listnum) {
-        toggle_panel.SetActive(true);
+    public void onClickEvent(int listnum)
+    {
+        // toggle_panel.SetActive(true);
         GameObject obj = Instantiate(block_prefab[listnum], new Vector3(0, 0.3f, 0.5f), Quaternion.identity) as GameObject;
-        GameObject toggleobj = Instantiate(GameObject.Find("Toggle Canvas"), new Vector3(0, 0.3f, 0.45f), Quaternion.identity) as GameObject;
-        toggleobj.transform.parent = obj.transform;
-        toggle_panel.SetActive(false);
+        // GameObject toggleobj = Instantiate(GameObject.Find("Toggle Canvas"), new Vector3(0, 0.3f, 0.45f), Quaternion.identity) as GameObject;
+        // toggleobj.transform.parent = obj.transform;
 
         blocks.Add(obj);
+    }
+
+    public void onToggleButtonClick()
+    {
+        geometryTargetObj = hitObject;
+        geometry_panel.SetActive(true);
+    }
+
+    public void onXButtonClick()
+    {
+        Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x + 90, rotation.y, rotation.z));
+    }
+
+    public void onYButtonClick()
+    {
+        Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotation.y + 90, rotation.z));
+    }
+
+    public void onZButtonClick()
+    {
+        Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotation.y, rotation.z + 90));
+    }
+
+    public void onDeleteButtonClick()
+    {
+        blocks.Remove(geometryTargetObj);
+        Destroy(geometryTargetObj);
+
+        geometryTargetObj = null;
+        geometry_panel.SetActive(false);
+    }
+
+    public void onCompleteButtonClick()
+    {
+        geometryTargetObj = null;
+        geometry_panel.SetActive(false);
     }
 
     public float truncate(float target)
@@ -149,7 +226,7 @@ public class BlockMGR : MonoBehaviour {
         int temp = (int)(target * 20);
         return (float)(temp) / 20;
     }
-    
+
     string setMountPanel()
     {
         handcount = 0;
