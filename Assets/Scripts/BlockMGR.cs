@@ -191,19 +191,28 @@ public class BlockMGR : MonoBehaviour
     public void onXButtonClick()
     {
         Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
-        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x + 90, rotation.y, rotation.z));
+        int newAngle = (int)rotation.x + 90;
+
+        if (newAngle >= 360) newAngle -= 360;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(newAngle, rotation.y, rotation.z));
     }
 
     public void onYButtonClick()
     {
         Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
-        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotation.y + 90, rotation.z));
+        int newAngle = (int)rotation.y + 90;
+
+        if (newAngle >= 360) newAngle -= 360;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, newAngle, rotation.z));
     }
 
     public void onZButtonClick()
     {
         Vector3 rotation = geometryTargetObj.transform.rotation.eulerAngles;
-        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotation.y, rotation.z + 90));
+        int newAngle = (int)rotation.z + 90;
+
+        if (newAngle >= 360) newAngle -= 360;
+        geometryTargetObj.transform.rotation = Quaternion.Euler(new Vector3(rotation.x, rotation.y, newAngle));
     }
 
     public void onDeleteButtonClick()
