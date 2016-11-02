@@ -52,6 +52,11 @@ public class BlockMGR : MonoBehaviour
         block_prefab.Add(Resources.Load("DirtBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("GrassBlock", typeof(GameObject)) as GameObject);
         block_prefab.Add(Resources.Load("WoolBlock", typeof(GameObject)) as GameObject);
+        block_prefab.Add(Resources.Load("ChestBlock", typeof(GameObject)) as GameObject);
+        block_prefab.Add(Resources.Load("BrickBlock", typeof(GameObject)) as GameObject);
+        block_prefab.Add(Resources.Load("HayBlock", typeof(GameObject)) as GameObject);
+        block_prefab.Add(Resources.Load("PumpkinBlock", typeof(GameObject)) as GameObject);
+        block_prefab.Add(Resources.Load("TntBlock", typeof(GameObject)) as GameObject);
 
         block_panel.SetActive(false);
         geometry_panel.SetActive(false);
