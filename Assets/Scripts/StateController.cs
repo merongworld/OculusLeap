@@ -23,8 +23,8 @@ public class StateController : MonoBehaviour
     private LeapController leapController;
     private GameObject leapMotionIcon;
 
-    Sprite leapMotionBlackSprite;
-    Sprite leapMotionGreenSprite;
+    private Sprite leapMotionBlackSprite;
+    private Sprite leapMotionGreenSprite;
 
     // Use this for initialization
     void Start()
