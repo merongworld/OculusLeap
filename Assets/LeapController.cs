@@ -12,6 +12,12 @@ using System.Collections.Generic;
 using Leap;
 using Leap.Unity;
 
+public enum DeviceState
+{
+    Disconnected,
+    Connected
+}
+
 public enum HandState
 {
     None,
@@ -23,7 +29,10 @@ public enum HandState
 
 public class LeapController : MonoBehaviour
 {
-    private LeapProvider provider;
+    private LeapServiceProvider provider;
+    private Controller controller;
+
+    private DeviceState deviceState;
     private HandState handState;
     private Hand leftHand;
     private Hand rightHand;
@@ -31,7 +40,10 @@ public class LeapController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        provider = FindObjectOfType<LeapProvider>() as LeapProvider;
+        provider = FindObjectOfType<LeapServiceProvider>() as LeapServiceProvider;
+        controller = provider.GetLeapController();
+
+        deviceState = DeviceState.Disconnected;
         handState = HandState.None;
         leftHand = null;
         rightHand = null;
@@ -40,31 +52,52 @@ public class LeapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SetBothHandsToNull();
+        UpdateDeviceState();
+
+        if (deviceState == DeviceState.Disconnected)
+        {
+            handState = HandState.None;
+        }
+        else
+        {
+            UpdateHandState();
+        }
+
+        Debug.Log(deviceState + " " + handState);
+    }
+
+    private void UpdateDeviceState()
+    {
+        if (!controller.IsConnected)
+        {
+            deviceState = DeviceState.Disconnected;
+            return;
+        }
+
+        deviceState = DeviceState.Connected;
+    }
+
+    private void UpdateHandState()
+    {
         Frame frame = provider.CurrentFrame;
         List<Hand> hands = frame.Hands;
         int handCount = hands.Count;
 
-        SetBothHandsToNull();
         switch (handCount)
         {
             case 1:
                 HandleOneHand(hands[0]);
                 break;
 
-            case 2:
-                HandleTwoHands(hands);
-                break;
-
             case 0:
                 handState = HandState.None;
                 break;
 
-            default: // When more than two hands are detected
-                handState = HandState.Invalid;
+            default:
+                HandleTwoOrMoreHands(hands);
                 break;
         }
-
-        Debug.Log(handState);
     }
 
     private void HandleOneHand(Hand hand)
@@ -83,7 +116,7 @@ public class LeapController : MonoBehaviour
         }
     }
 
-    private void HandleTwoHands(List<Hand> hands)
+    private void HandleTwoOrMoreHands(List<Hand> hands)
     {
         foreach (Hand hand in hands)
         {
@@ -99,11 +132,9 @@ public class LeapController : MonoBehaviour
             }
         }
 
-        // Handle when two hands are detected as the same type
-        if (!AreBothHandsNotNull())
+        if (!AreBothHandsNotNull() || hands.Count > 2)
         {
             handState = HandState.Invalid;
-            SetBothHandsToNull();
             return;
         }
 
@@ -122,6 +153,11 @@ public class LeapController : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public DeviceState GetDeviceState()
+    {
+        return deviceState;
     }
 
     public HandState GetHandState()
