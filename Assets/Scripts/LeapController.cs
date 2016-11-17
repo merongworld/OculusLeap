@@ -155,23 +155,23 @@ public class LeapController : MonoBehaviour
         return false;
     }
 
-    public DeviceState GetDeviceState()
+    public DeviceState DeviceState
     {
-        return deviceState;
+        get { return deviceState; }
     }
 
-    public HandState GetHandState()
+    public HandState HandState
     {
-        return handState;
+        get { return handState; }
     }
 
-    public Hand GetLeftHand()
+    public Hand LeftHand
     {
-        return leftHand;
+        get { return leftHand; }
     }
 
-    public Hand GetRightHand()
+    public Hand RightHand
     {
-        return rightHand;
+        get { return rightHand; }
     }
 }
