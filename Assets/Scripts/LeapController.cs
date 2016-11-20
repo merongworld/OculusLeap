@@ -52,6 +52,8 @@ public class LeapController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (controller == null) { return; }
+
         SetBothHandsToNull();
         UpdateDeviceState();
 
