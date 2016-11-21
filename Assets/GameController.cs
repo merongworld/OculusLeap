@@ -20,7 +20,7 @@ public enum MenuState
 
 public class GameController : MonoBehaviour
 {
-    MenuState menuState;
+    private MenuState menuState;
 
     // Use this for initialization
     void Start()
@@ -32,5 +32,10 @@ public class GameController : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public MenuState GetMenuState()
+    {
+        return menuState;
     }
 }
