@@ -1,5 +1,5 @@
 ﻿//
-//  MenuController.cs
+//  MenuPanelController.cs
 //  OculusLeap
 //
 //  Created by merongworld on 11/21/2016.
@@ -9,8 +9,18 @@
 using UnityEngine;
 using System.Collections;
 
-public class MenuController : MonoBehaviour
+public enum PanelState
 {
+    None,
+    Main,
+    Add,
+    Edit,
+    Settings
+}
+
+public class MenuPanelController : MonoBehaviour
+{
+    private PanelState panelState;
     private GameObject menuCanvas;
     private GameObject mainPanel;
     private GameObject addPanel;
@@ -20,6 +30,7 @@ public class MenuController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        panelState = PanelState.None;
         menuCanvas = GameObject.Find("MenuCanvas");
         mainPanel = GameObject.Find("MainPanel");
         addPanel = GameObject.Find("AddPanel");
