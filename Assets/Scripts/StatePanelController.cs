@@ -1,5 +1,5 @@
 ﻿//
-//  StateController.cs
+//  StatePanelController.cs
 //  OculusLeap
 //
 //  Created by merongworld on 11/17/2016.
@@ -18,7 +18,7 @@ public enum HandIconState
 }
 
 // To keep track of current state
-public struct State
+public struct CurrentState
 {
     public DeviceState device;
     public HandState hand;
@@ -26,9 +26,9 @@ public struct State
     public HandIconState rightHandIcon;
 }
 
-public class StateController : MonoBehaviour
+public class StatePanelController : MonoBehaviour
 {
-    private State currentState;
+    private CurrentState currentState;
     private LeapController leapController;
 
     private GameObject leapMotionIcon;
