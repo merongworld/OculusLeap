@@ -20,7 +20,9 @@ public enum PanelState
 
 public class MenuPanelController : MonoBehaviour
 {
+    private GameController gameController;
     private PanelState panelState;
+
     private GameObject canvas;
     private GameObject mainPanel;
     private GameObject addPanel;
@@ -30,14 +32,16 @@ public class MenuPanelController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        gameController = FindObjectOfType<GameController>();
         panelState = PanelState.None;
+
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
         addPanel = GameObject.Find("AddPanel");
         editPanel = GameObject.Find("EditPanel");
         settingsPanel = GameObject.Find("SettingsPanel");
 
-        // menuCanvas.SetActive(false);
+        canvas.SetActive(false);
         addPanel.SetActive(false);
         editPanel.SetActive(false);
         settingsPanel.SetActive(false);
@@ -69,7 +73,7 @@ public class MenuPanelController : MonoBehaviour
                 break;
 
             case "MainCloseButton":
-                canvas.SetActive(false);
+                gameController.MenuState = MenuState.None;
                 break;
         }
     }

@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Leap;
 
 public class InputController : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (gameController.GetMenuState())
+        switch (gameController.MenuState)
         {
             case MenuState.None:
                 HandleNoneMenuState();
@@ -48,6 +49,12 @@ public class InputController : MonoBehaviour
 
     private void HandleNoneActionState()
     {
+        Hand rightHand = leapController.RightHand;
+        if (rightHand == null) { return; }
 
+        if (rightHand.GrabStrength > 0.9)
+        {
+            gameController.MenuState = MenuState.Main;
+        }
     }
 }

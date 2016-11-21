@@ -28,10 +28,15 @@ public class GameController : MonoBehaviour
     private MenuState menuState;
     private ActionState actionState;
 
+    private GameObject canvas;
+    private GameObject mainPanel;
+
     // Use this for initialization
     void Start()
     {
         menuState = MenuState.None;
+        canvas = GameObject.Find("Canvas");
+        mainPanel = GameObject.Find("MainPanel");
     }
 
     // Update is called once per frame
@@ -40,13 +45,38 @@ public class GameController : MonoBehaviour
 
     }
 
-    public MenuState GetMenuState()
+    public MenuState MenuState
     {
-        return menuState;
+        get { return menuState; }
+        set
+        {
+            if (menuState != value)
+            {
+                UpdateMenuState(value);
+            }
+        }
     }
 
     public ActionState GetActionState()
     {
         return actionState;
+    }
+
+    private void UpdateMenuState(MenuState newMenuState)
+    {
+        // switch to new menu state
+        switch (newMenuState)
+        {
+            case MenuState.None:
+                canvas.SetActive(false);
+                break;
+
+            case MenuState.Main:
+                canvas.SetActive(true);
+                mainPanel.SetActive(true);
+                break;
+        }
+
+        menuState = newMenuState;
     }
 }
