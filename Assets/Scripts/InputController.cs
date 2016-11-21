@@ -1,5 +1,5 @@
 ﻿//
-//  GestureController.cs
+//  InputController.cs
 //  OculusLeap
 //
 //  Created by merongworld on 11/21/2016.
@@ -9,7 +9,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GestureController : MonoBehaviour
+public class InputController : MonoBehaviour
 {
     private GameController gameController;
     private LeapController leapController;
