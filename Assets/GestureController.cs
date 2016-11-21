@@ -11,8 +11,8 @@ using System.Collections;
 
 public class GestureController : MonoBehaviour
 {
-    GameController gameController;
-    LeapController leapController;
+    private GameController gameController;
+    private LeapController leapController;
 
     // Use this for initialization
     void Start()
@@ -23,6 +23,30 @@ public class GestureController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        switch (gameController.GetMenuState())
+        {
+            case MenuState.None:
+                HandleNoneMenuState();
+                break;
+
+            case MenuState.Main:
+                // Do nothing
+                break;
+        }
+    }
+
+    private void HandleNoneMenuState()
+    {
+        switch (gameController.GetActionState())
+        {
+            case ActionState.None:
+                HandleNoneActionState();
+                break;
+        }
+    }
+
+    private void HandleNoneActionState()
     {
 
     }
