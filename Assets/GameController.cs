@@ -18,9 +18,15 @@ public enum MenuState
     Settings
 }
 
+public enum ActionState
+{
+    None
+}
+
 public class GameController : MonoBehaviour
 {
     private MenuState menuState;
+    private ActionState actionState;
 
     // Use this for initialization
     void Start()
@@ -37,5 +43,10 @@ public class GameController : MonoBehaviour
     public MenuState GetMenuState()
     {
         return menuState;
+    }
+
+    public ActionState GetActionState()
+    {
+        return actionState;
     }
 }
