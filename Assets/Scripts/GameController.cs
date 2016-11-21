@@ -30,13 +30,20 @@ public class GameController : MonoBehaviour
 
     private GameObject canvas;
     private GameObject mainPanel;
+    private GameObject settingsPanel;
 
     // Use this for initialization
     void Start()
     {
         menuState = MenuState.None;
+
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
+        settingsPanel = GameObject.Find("SettingsPanel");
+
+        canvas.SetActive(false);
+        mainPanel.SetActive(false);
+        settingsPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -64,7 +71,13 @@ public class GameController : MonoBehaviour
 
     private void UpdateMenuState(MenuState newMenuState)
     {
-        // switch to new menu state
+        switch (menuState)
+        {
+            case MenuState.Main:
+                mainPanel.SetActive(false);
+                break;
+        }
+
         switch (newMenuState)
         {
             case MenuState.None:
@@ -74,6 +87,11 @@ public class GameController : MonoBehaviour
             case MenuState.Main:
                 canvas.SetActive(true);
                 mainPanel.SetActive(true);
+                break;
+
+            case MenuState.Settings:
+                canvas.SetActive(true);
+                settingsPanel.SetActive(true);
                 break;
         }
 
