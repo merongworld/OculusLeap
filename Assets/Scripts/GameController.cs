@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour
 {
     private MenuState menuState;
     private ActionState actionState;
+    private StatePanelController statePanelController;
 
     private GameObject canvas;
     private GameObject mainPanel;
@@ -36,6 +37,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         menuState = MenuState.None;
+        statePanelController = FindObjectOfType<StatePanelController>();
 
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
@@ -86,11 +88,13 @@ public class GameController : MonoBehaviour
 
             case MenuState.Main:
                 canvas.SetActive(true);
+                statePanelController.UpdateTitleText("MAIN MENU");
                 mainPanel.SetActive(true);
                 break;
 
             case MenuState.Settings:
                 canvas.SetActive(true);
+                statePanelController.UpdateTitleText("SETTINGS");
                 settingsPanel.SetActive(true);
                 break;
         }

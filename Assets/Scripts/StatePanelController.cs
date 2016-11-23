@@ -7,6 +7,7 @@
 //
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using Leap;
 
@@ -45,6 +46,9 @@ public class StatePanelController : MonoBehaviour
     private Sprite rightHandRedSprite;
     private Sprite rightHandGreenSprite;
 
+    private Text titleText;
+    private Text timeText;
+
     // Use this for initialization
     void Start()
     {
@@ -72,6 +76,9 @@ public class StatePanelController : MonoBehaviour
         rightHandGraySprite = Resources.Load<Sprite>("right_hand_gray");
         rightHandRedSprite = Resources.Load<Sprite>("right_hand_red");
         rightHandGreenSprite = Resources.Load<Sprite>("right_hand_green");
+
+        titleText = GameObject.Find("TitleText").GetComponent<Text>();
+        timeText = GameObject.Find("TimeText").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -213,5 +220,15 @@ public class StatePanelController : MonoBehaviour
         }
 
         return HandIconState.Invalid;
+    }
+
+    public void UpdateTitleText(string text)
+    {
+        titleText.text = text;
+    }
+
+    public void UpdateTimeText(string text)
+    {
+        timeText.text = text;
     }
 }
