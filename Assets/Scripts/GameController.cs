@@ -28,9 +28,13 @@ public class GameController : MonoBehaviour
     private MenuState menuState;
     private ActionState actionState;
 
+    private bool didMenuChange = false;
+    private float elapsedTime = 0.0f;
+
     private Camera mainCamera;
     private StatePanelController statePanelController;
 
+    private GameObject leapEventSystem;
     private GameObject canvas;
     private GameObject mainPanel;
     private GameObject settingsPanel;
@@ -45,6 +49,7 @@ public class GameController : MonoBehaviour
         mainCamera = Camera.main;
         statePanelController = FindObjectOfType<StatePanelController>();
 
+        leapEventSystem = GameObject.Find("LeapEventSystem");
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
         settingsPanel = GameObject.Find("SettingsPanel");
@@ -67,6 +72,18 @@ public class GameController : MonoBehaviour
         {
             case ActionState.None:
                 break;
+        }
+
+        if (didMenuChange)
+        {
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime > 0.15f)
+            {
+                didMenuChange = false;
+                elapsedTime = 0.0f;
+                leapEventSystem.SetActive(true);
+            }
         }
     }
 
@@ -112,6 +129,12 @@ public class GameController : MonoBehaviour
 
             case MenuState.Edit:
                 break;
+        }
+
+        if (newMenuState != MenuState.None)
+        {
+            leapEventSystem.SetActive(false);
+            didMenuChange = true;
         }
 
         switch (newMenuState)

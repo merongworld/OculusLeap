@@ -101,4 +101,45 @@ public class MenuPanelController : MonoBehaviour
                 break;
         }
     }
+
+    public void OnAddButtonClick(GameObject addButton)
+    {
+        switch (addButton.name)
+        {
+            case "AddGrassButton":
+                break;
+
+            case "AddDirtButton":
+                break;
+
+            case "AddWoolButton":
+                break;
+
+            case "AddBrickButton":
+                break;
+
+            case "AddBookshelfButton":
+                break;
+
+            case "AddPumpkinButton":
+                break;
+
+            case "AddHayButton":
+                break;
+
+            case "AddChestButton":
+                break;
+
+            case "AddTntButton":
+                break;
+
+            case "AddBackButton":
+                gameController.MenuState = MenuState.Main;
+                break;
+
+            case "AddCloseButton":
+                gameController.MenuState = MenuState.None;
+                break;
+        }
+    }
 }
