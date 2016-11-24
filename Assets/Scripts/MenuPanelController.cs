@@ -39,6 +39,8 @@ public class MenuPanelController : MonoBehaviour
 
     public void OnMainButtonClick(GameObject mainButton)
     {
+        if (mainButton == null) { return; }
+
         switch (mainButton.name)
         {
             case "MainAddButton":
@@ -61,6 +63,8 @@ public class MenuPanelController : MonoBehaviour
 
     public void OnSettingsButtonClick(GameObject settingsButton)
     {
+        if (settingsButton == null) { return; }
+
         switch (settingsButton.name)
         {
             case "SettingsBackButton":
@@ -75,9 +79,10 @@ public class MenuPanelController : MonoBehaviour
 
     public void OnSettingsSliderValueChanged(GameObject settingsSlider)
     {
+        if (settingsSlider == null) { return; }
+
         float value;
         Color color;
-
         Slider slider = settingsSlider.GetComponent<Slider>();
 
         switch (settingsSlider.name)
@@ -104,7 +109,26 @@ public class MenuPanelController : MonoBehaviour
 
     public void OnAddButtonClick(GameObject addButton)
     {
+        if (addButton == null) { return; }
+
         switch (addButton.name)
+        {
+            case "AddBackButton":
+                gameController.MenuState = MenuState.Main;
+                break;
+
+            case "AddCloseButton":
+                gameController.MenuState = MenuState.None;
+                break;
+        }
+    }
+
+    public void OnAddBlockButtonClick(GameObject addBlockButton)
+    {
+        if (addBlockButton == null) { return; }
+
+        gameController.ActionState = ActionState.Attach;
+        switch (addBlockButton.name)
         {
             case "AddGrassButton":
                 break;
@@ -131,14 +155,6 @@ public class MenuPanelController : MonoBehaviour
                 break;
 
             case "AddTntButton":
-                break;
-
-            case "AddBackButton":
-                gameController.MenuState = MenuState.Main;
-                break;
-
-            case "AddCloseButton":
-                gameController.MenuState = MenuState.None;
                 break;
         }
     }

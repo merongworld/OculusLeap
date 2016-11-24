@@ -20,7 +20,9 @@ public enum MenuState
 
 public enum ActionState
 {
-    None
+    None,
+    UI,
+    Attach
 }
 
 public class GameController : MonoBehaviour
@@ -92,16 +94,17 @@ public class GameController : MonoBehaviour
         get { return menuState; }
         set
         {
-            if (menuState != value)
-            {
-                UpdateMenuState(value);
-            }
+            if (menuState != value) { UpdateMenuState(value); }
         }
     }
 
     public ActionState ActionState
     {
         get { return actionState; }
+        set
+        {
+            if (actionState != value) { actionState = value; }
+        }
     }
 
     public Camera MainCamera
@@ -141,24 +144,28 @@ public class GameController : MonoBehaviour
         {
             case MenuState.None:
                 canvas.SetActive(false);
+                ActionState = ActionState.None;
                 break;
 
             case MenuState.Main:
                 canvas.SetActive(true);
                 statePanelController.UpdateTitleText("MAIN MENU");
                 mainPanel.SetActive(true);
+                ActionState = ActionState.UI;
                 break;
 
             case MenuState.Settings:
                 canvas.SetActive(true);
                 statePanelController.UpdateTitleText("SETTINGS");
                 settingsPanel.SetActive(true);
+                ActionState = ActionState.UI;
                 break;
 
             case MenuState.Add:
                 canvas.SetActive(true);
                 statePanelController.UpdateTitleText("ADD BLOCK");
                 addPanel.SetActive(true);
+                ActionState = ActionState.UI;
                 break;
 
             case MenuState.Edit:
