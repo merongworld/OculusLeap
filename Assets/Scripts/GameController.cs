@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum BlockType
 {
@@ -37,7 +38,8 @@ public enum ActionState
     None,
     UI,
     Attach,
-    Move
+    Move,
+    Pick
 }
 
 public class GameController : MonoBehaviour
@@ -45,16 +47,18 @@ public class GameController : MonoBehaviour
     private MenuState menuState;
     private ActionState actionState;
 
-    private BlockType selectedBlockType;
-    private GameObject selectedBlock;
+    private BlockType pickedBlockType;
+    private GameObject pickedBlock;
 
     private bool didMenuChange;
     private float elapsedTime;
     private int blockCount;
 
     private Camera mainCamera;
+    private GameObjectController gameObjectController;
     private StatePanelController statePanelController;
 
+    private GameObject raycastPoint;
     private GameObject leapEventSystem;
     private GameObject canvas;
     private GameObject mainPanel;
@@ -68,16 +72,18 @@ public class GameController : MonoBehaviour
         menuState = MenuState.None;
         actionState = ActionState.None;
 
-        selectedBlockType = BlockType.None;
-        selectedBlock = null;
+        pickedBlockType = BlockType.None;
+        pickedBlock = null;
 
         didMenuChange = false;
         elapsedTime = 0.0f;
         blockCount = 0;
 
         mainCamera = Camera.main;
+        gameObjectController = FindObjectOfType<GameObjectController>();
         statePanelController = FindObjectOfType<StatePanelController>();
 
+        raycastPoint = GameObject.Find("RaycastPoint");
         leapEventSystem = GameObject.Find("LeapEventSystem");
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
@@ -87,6 +93,7 @@ public class GameController : MonoBehaviour
 
         UpdateBackgroundColor(0.125f, 0.125f, 0.125f);
 
+        raycastPoint.SetActive(false);
         canvas.SetActive(false);
         mainPanel.SetActive(false);
         settingsPanel.SetActive(false);
@@ -108,6 +115,17 @@ public class GameController : MonoBehaviour
                 leapEventSystem.SetActive(true);
             }
         }
+
+        switch (actionState)
+        {
+            case ActionState.Pick:
+                HandlePickState();
+                break;
+
+            default:
+                // Do nothing
+                break;
+        }
     }
 
     public MenuState MenuState
@@ -128,16 +146,16 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public BlockType SelectedBlockType
+    public BlockType PickedBlockType
     {
-        get { return selectedBlockType; }
-        set { selectedBlockType = value; }
+        get { return pickedBlockType; }
+        set { pickedBlockType = value; }
     }
 
     public GameObject SelectedBlock
     {
-        get { return selectedBlock; }
-        set { selectedBlock = value; }
+        get { return pickedBlock; }
+        set { pickedBlock = value; }
     }
 
     public int BlockCount
@@ -149,6 +167,89 @@ public class GameController : MonoBehaviour
     public Camera MainCamera
     {
         get { return mainCamera; }
+    }
+
+    public GameObject RaycastPoint
+    {
+        get { return raycastPoint; }
+    }
+
+    private void HandlePickState()
+    {
+        if (menuState == MenuState.Edit)
+        {
+            GameObject blocks = GameObject.Find("Blocks");
+            if (blockCount == 0 || blocks == null) { return; }
+
+            Transform mainCameraT = mainCamera.transform;
+            Ray ray = new Ray(mainCameraT.position,
+                Vector3.Normalize(mainCameraT.rotation * Vector3.forward));
+            RaycastHit hit;
+
+            raycastPoint.transform.localPosition = new Vector3(0.0f, 0.0f, 0.5f);
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject hitGameObject = hit.collider.gameObject;
+                List<GameObject> blocksChildren = gameObjectController.GetChildrenList(blocks);
+
+                GameObject searchResult = null;
+                foreach (GameObject blocksChild in blocksChildren)
+                {
+                    if (hitGameObject == blocksChild)
+                    {
+                        searchResult = blocksChild;
+                        break;
+                    }
+                }
+
+                if (searchResult != null)
+                {
+                    if (pickedBlock == null)
+                    {
+                        Dictionary<string, GameObject> hitGameObjectChildren =
+                            gameObjectController.GetChildren(hitGameObject);
+                        hitGameObjectChildren["Cube"].SetActive(true);
+
+                        pickedBlock = searchResult;
+                        elapsedTime = 0.0f;
+                    }
+                    else
+                    {
+                        elapsedTime += Time.deltaTime;
+
+                        if (elapsedTime > 2.0f)
+                        {
+                            ActionState = ActionState.UI;
+                            raycastPoint.SetActive(false);
+                            Dictionary<string, GameObject> pickedBlockChildren =
+                                gameObjectController.GetChildren(pickedBlock);
+                            pickedBlockChildren["Cube"].SetActive(false);
+                            return;
+                        }
+                    }
+
+                    Vector3 target = mainCameraT.position;
+                    Vector3 hitPosition = hitGameObject.transform.position;
+                    float distance = Vector3.Distance(target, hitPosition);
+
+                    if (distance < 0.5)
+                    {
+                        float newZ = distance - 0.09f;
+                        if (newZ < 0) { newZ = 0.0f; }
+
+                        raycastPoint.transform.localPosition = new Vector3(0.0f, 0.0f, newZ);
+                    }
+                }
+            }
+            else if (pickedBlock != null)
+            {
+                Dictionary<string, GameObject> pickedBlockChildren =
+                        gameObjectController.GetChildren(pickedBlock);
+                pickedBlockChildren["Cube"].SetActive(false);
+                pickedBlock = null;
+                elapsedTime = 0.0f;
+            }
+        }
     }
 
     private void UpdateMenuState(MenuState newMenuState)
@@ -168,6 +269,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case MenuState.Edit:
+                editPanel.SetActive(false);
                 break;
         }
 
@@ -206,9 +308,11 @@ public class GameController : MonoBehaviour
                 break;
 
             case MenuState.Edit:
+                raycastPoint.SetActive(true);
                 canvas.SetActive(false);
                 statePanelController.UpdateTitleText("EDIT BLOCK");
                 editPanel.SetActive(true);
+                ActionState = ActionState.Pick;
                 break;
         }
 
@@ -217,7 +321,7 @@ public class GameController : MonoBehaviour
 
     private void UpdateActionState(ActionState newActionState)
     {
-        Debug.Log(newActionState);
+        // Debug.Log(newActionState);
 
         switch (newActionState)
         {
@@ -226,6 +330,10 @@ public class GameController : MonoBehaviour
 
             case ActionState.Attach:
                 if (menuState == MenuState.Add) { canvas.SetActive(false); }
+                break;
+
+            case ActionState.UI:
+                if (menuState == MenuState.Edit) { canvas.SetActive(true); }
                 break;
         }
 

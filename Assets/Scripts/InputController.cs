@@ -43,6 +43,10 @@ public class InputController : MonoBehaviour
                 HandleMoveActionState(gameController.MenuState);
                 break;
 
+            case ActionState.Pick:
+                HandlePickActionState(gameController.MenuState);
+                break;
+
             default:
                 break;
         }
@@ -84,7 +88,7 @@ public class InputController : MonoBehaviour
             if (rightHand != null)
             {
                 string resourcePath =
-                    GetResourcePathFromBlockType(gameController.SelectedBlockType);
+                    GetResourcePathFromBlockType(gameController.PickedBlockType);
                 if (resourcePath == null) { return; }
 
                 Object resource = Resources.Load(resourcePath, typeof(GameObject));
@@ -106,6 +110,7 @@ public class InputController : MonoBehaviour
                 block.GetComponent<Transform>().localPosition = palmPosition + palmNormal * 0.08f;
 
                 gameController.ActionState = ActionState.Move;
+                gameController.BlockCount += 1;
             }
         }
     }
@@ -127,7 +132,7 @@ public class InputController : MonoBehaviour
                     {
                         gameController.MenuState = MenuState.None;
                         gameController.ActionState = ActionState.None;
-                        gameController.SelectedBlockType = BlockType.None;
+                        gameController.PickedBlockType = BlockType.None;
                         gameController.SelectedBlock = null;
 
                         return;
@@ -150,9 +155,29 @@ public class InputController : MonoBehaviour
         }
     }
 
+    private void HandlePickActionState(MenuState menuState)
+    {
+        Hand leftHand = leapController.LeftHand;
+
+        if (menuState == MenuState.Edit)
+        {
+            if (leapController.HandState == HandState.None) { return; }
+
+            if (leftHand != null)
+            {
+                if (leftHand.GrabStrength > 0.9f)
+                {
+                    gameController.MenuState = MenuState.None;
+                    gameController.ActionState = ActionState.None;
+                    gameController.RaycastPoint.SetActive(false);
+                }
+            }
+        }
+    }
+
     private string GetResourcePathFromBlockType(BlockType blockType)
     {
-        switch (gameController.SelectedBlockType)
+        switch (gameController.PickedBlockType)
         {
             case BlockType.Grass: return "BookShelfBlock";
             case BlockType.Dirt: return "DirtBlock";
