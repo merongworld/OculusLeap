@@ -152,7 +152,7 @@ public class GameController : MonoBehaviour
         set { pickedBlockType = value; }
     }
 
-    public GameObject SelectedBlock
+    public GameObject PickedBlock
     {
         get { return pickedBlock; }
         set { pickedBlock = value; }
@@ -210,7 +210,7 @@ public class GameController : MonoBehaviour
                             gameObjectController.GetChildren(hitGameObject);
                         hitGameObjectChildren["Cube"].SetActive(true);
 
-                        pickedBlock = searchResult;
+                        PickedBlock = searchResult;
                         elapsedTime = 0.0f;
                     }
                     else
@@ -246,7 +246,7 @@ public class GameController : MonoBehaviour
                 Dictionary<string, GameObject> pickedBlockChildren =
                         gameObjectController.GetChildren(pickedBlock);
                 pickedBlockChildren["Cube"].SetActive(false);
-                pickedBlock = null;
+                PickedBlock = null;
                 elapsedTime = 0.0f;
             }
         }
@@ -291,6 +291,8 @@ public class GameController : MonoBehaviour
                 statePanelController.UpdateTitleText("MAIN MENU");
                 mainPanel.SetActive(true);
                 ActionState = ActionState.UI;
+                PickedBlock = null;
+                PickedBlockType = BlockType.None;
                 break;
 
             case MenuState.Settings:

@@ -101,7 +101,7 @@ public class InputController : MonoBehaviour
                 }
 
                 GameObject block = Instantiate(resource) as GameObject;
-                gameController.SelectedBlock = block;
+                gameController.PickedBlock = block;
 
                 Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
                 Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
@@ -132,9 +132,6 @@ public class InputController : MonoBehaviour
                     {
                         gameController.MenuState = MenuState.None;
                         gameController.ActionState = ActionState.None;
-                        gameController.PickedBlockType = BlockType.None;
-                        gameController.SelectedBlock = null;
-
                         return;
                     }
                 }
@@ -147,7 +144,7 @@ public class InputController : MonoBehaviour
                     Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
                     Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
 
-                    GameObject block = gameController.SelectedBlock;
+                    GameObject block = gameController.PickedBlock;
                     block.GetComponent<Transform>().localPosition =
                         Truncate(palmPosition + palmNormal * 0.08f);
                 }

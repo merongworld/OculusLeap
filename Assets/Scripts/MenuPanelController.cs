@@ -123,6 +123,27 @@ public class MenuPanelController : MonoBehaviour
         }
     }
 
+    public void OnEditButtonClick(GameObject editButton)
+    {
+        if (editButton == null) { return; }
+
+        switch (editButton.name)
+        {
+            case "EditMoveButton":
+                break;
+
+            case "EditScaleButton":
+                break;
+
+            case "EditDeleteButton":
+                break;
+
+            case "EditCloseButton":
+                gameController.MenuState = MenuState.None;
+                break;
+        }
+    }
+
     public void OnAddBlockButtonClick(GameObject addBlockButton)
     {
         if (addBlockButton == null) { return; }
