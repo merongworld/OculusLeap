@@ -78,6 +78,10 @@ public class GameController : MonoBehaviour
             case MenuState.Main:
                 mainPanel.SetActive(false);
                 break;
+
+            case MenuState.Settings:
+                settingsPanel.SetActive(false);
+                break;
         }
 
         switch (newMenuState)

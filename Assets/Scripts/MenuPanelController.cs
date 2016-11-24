@@ -42,9 +42,9 @@ public class MenuPanelController : MonoBehaviour
 
     }
 
-    public void OnMainButtonClick(GameObject button)
+    public void OnMainButtonClick(GameObject mainButton)
     {
-        switch (button.name)
+        switch (mainButton.name)
         {
             case "MainAddButton":
                 break;
@@ -57,6 +57,20 @@ public class MenuPanelController : MonoBehaviour
                 break;
 
             case "MainCloseButton":
+                gameController.MenuState = MenuState.None;
+                break;
+        }
+    }
+
+    public void OnSettingsButtonClick(GameObject settingsButton)
+    {
+        switch (settingsButton.name)
+        {
+            case "SettingsBackButton":
+                gameController.MenuState = MenuState.Main;
+                break;
+
+            case "SettingsCloseButton":
                 gameController.MenuState = MenuState.None;
                 break;
         }
