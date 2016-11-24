@@ -39,7 +39,7 @@ public class InputController : MonoBehaviour
 
     private void HandleNoneMenuState()
     {
-        switch (gameController.GetActionState())
+        switch (gameController.ActionState)
         {
             case ActionState.None:
                 HandleNoneActionState();

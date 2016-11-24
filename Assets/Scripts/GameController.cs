@@ -34,6 +34,8 @@ public class GameController : MonoBehaviour
     private GameObject canvas;
     private GameObject mainPanel;
     private GameObject settingsPanel;
+    private GameObject addPanel;
+    private GameObject editPanel;
 
     // Use this for initialization
     void Start()
@@ -46,18 +48,26 @@ public class GameController : MonoBehaviour
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
         settingsPanel = GameObject.Find("SettingsPanel");
+        addPanel = GameObject.Find("AddPanel");
+        editPanel = GameObject.Find("EditPanel");
 
         UpdateBackgroundColor(0.125f, 0.125f, 0.125f);
 
         canvas.SetActive(false);
         mainPanel.SetActive(false);
         settingsPanel.SetActive(false);
+        addPanel.SetActive(false);
+        editPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        switch (actionState)
+        {
+            case ActionState.None:
+                break;
+        }
     }
 
     public MenuState MenuState
@@ -72,9 +82,9 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public ActionState GetActionState()
+    public ActionState ActionState
     {
-        return actionState;
+        get { return actionState; }
     }
 
     public Camera MainCamera
@@ -92,6 +102,13 @@ public class GameController : MonoBehaviour
 
             case MenuState.Settings:
                 settingsPanel.SetActive(false);
+                break;
+
+            case MenuState.Add:
+                addPanel.SetActive(false);
+                break;
+
+            case MenuState.Edit:
                 break;
         }
 
@@ -111,6 +128,15 @@ public class GameController : MonoBehaviour
                 canvas.SetActive(true);
                 statePanelController.UpdateTitleText("SETTINGS");
                 settingsPanel.SetActive(true);
+                break;
+
+            case MenuState.Add:
+                canvas.SetActive(true);
+                statePanelController.UpdateTitleText("ADD BLOCK");
+                addPanel.SetActive(true);
+                break;
+
+            case MenuState.Edit:
                 break;
         }
 

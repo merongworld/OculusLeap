@@ -24,17 +24,11 @@ public class MenuPanelController : MonoBehaviour
     private GameController gameController;
     private PanelState panelState;
 
-    private GameObject addPanel;
-    private GameObject editPanel;
-
     // Use this for initialization
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
         panelState = PanelState.None;
-
-        addPanel = GameObject.Find("AddPanel");
-        editPanel = GameObject.Find("EditPanel");
     }
 
     // Update is called once per frame
@@ -48,9 +42,11 @@ public class MenuPanelController : MonoBehaviour
         switch (mainButton.name)
         {
             case "MainAddButton":
+                gameController.MenuState = MenuState.Add;
                 break;
 
             case "MainEditButton":
+                gameController.MenuState = MenuState.Edit;
                 break;
 
             case "MainSettingsButton":
