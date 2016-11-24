@@ -39,7 +39,9 @@ public enum ActionState
     UI,
     Attach,
     Move,
-    Pick
+    Pick,
+    Delete,
+    Scale
 }
 
 public class GameController : MonoBehaviour
@@ -122,10 +124,25 @@ public class GameController : MonoBehaviour
                 HandlePickState();
                 break;
 
+            case ActionState.Delete:
+                if (PickedBlock != null) { Destroy(PickedBlock); }
+
+                BlockCount -= 1;
+                if (BlockCount <= 0)
+                {
+                    GameObject blocks = GameObject.Find("Blocks");
+                    if (blocks != null) { Destroy(blocks); }
+                }
+
+                MenuState = MenuState.None;
+                break;
+
             default:
                 // Do nothing
                 break;
         }
+
+        Debug.Log(ActionState);
     }
 
     public MenuState MenuState
@@ -332,10 +349,19 @@ public class GameController : MonoBehaviour
 
             case ActionState.Attach:
                 if (menuState == MenuState.Add) { canvas.SetActive(false); }
+                else if (menuState == MenuState.Edit) { canvas.SetActive(false); }
                 break;
 
             case ActionState.UI:
                 if (menuState == MenuState.Edit) { canvas.SetActive(true); }
+                break;
+
+            case ActionState.Scale:
+                if (menuState == MenuState.Edit) { canvas.SetActive(false); }
+                break;
+
+            default:
+                // Do nothing
                 break;
         }
 

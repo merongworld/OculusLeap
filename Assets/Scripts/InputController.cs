@@ -48,6 +48,7 @@ public class InputController : MonoBehaviour
                 break;
 
             default:
+                // Do nothing
                 break;
         }
     }
@@ -72,7 +73,7 @@ public class InputController : MonoBehaviour
         Hand leftHand = leapController.LeftHand;
         Hand rightHand = leapController.RightHand;
 
-        if (menuState == MenuState.Add)
+        if (menuState == MenuState.Add || menuState == MenuState.Edit)
         {
             if (leapController.HandState == HandState.None) { return; }
 
@@ -87,12 +88,7 @@ public class InputController : MonoBehaviour
 
             if (rightHand != null)
             {
-                string resourcePath =
-                    GetResourcePathFromBlockType(gameController.PickedBlockType);
-                if (resourcePath == null) { return; }
-
-                Object resource = Resources.Load(resourcePath, typeof(GameObject));
-
+                GameObject block = gameController.PickedBlock;
                 GameObject blocks = GameObject.Find("Blocks");
                 if (gameController.BlockCount == 0 || blocks == null)
                 {
@@ -100,17 +96,29 @@ public class InputController : MonoBehaviour
                     blocks.transform.SetAsLastSibling();
                 }
 
-                GameObject block = Instantiate(resource) as GameObject;
+                if (menuState == MenuState.Add && block == null)
+                {
+                    string resourcePath =
+                    GetResourcePathFromBlockType(gameController.PickedBlockType);
+                    if (resourcePath == null) { return; }
+
+                    Object resource = Resources.Load(resourcePath, typeof(GameObject));
+                    block = Instantiate(resource) as GameObject;
+
+                    gameController.BlockCount += 1;
+                }
+
+                float scale = block.transform.localScale.x;
                 gameController.PickedBlock = block;
 
                 Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
                 Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
 
                 block.transform.parent = blocks.transform;
-                block.GetComponent<Transform>().localPosition = palmPosition + palmNormal * 0.08f;
+                block.GetComponent<Transform>().localPosition =
+                        Truncate(palmPosition + palmNormal * 0.08f * scale);
 
                 gameController.ActionState = ActionState.Move;
-                gameController.BlockCount += 1;
             }
         }
     }
@@ -120,7 +128,7 @@ public class InputController : MonoBehaviour
         Hand leftHand = leapController.LeftHand;
         Hand rightHand = leapController.RightHand;
 
-        if (menuState == MenuState.Add)
+        if (menuState == MenuState.Add || menuState == MenuState.Edit)
         {
             if (leapController.HandState == HandState.None) { return; }
 
@@ -145,8 +153,16 @@ public class InputController : MonoBehaviour
                     Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
 
                     GameObject block = gameController.PickedBlock;
+                    float scale = block.transform.localScale.x;
+
                     block.GetComponent<Transform>().localPosition =
-                        Truncate(palmPosition + palmNormal * 0.08f);
+                        Truncate(palmPosition + palmNormal * 0.08f * scale);
+                    block.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
+                }
+                else
+                {
+                    GameObject block = gameController.PickedBlock;
+                    block.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                 }
             }
         }

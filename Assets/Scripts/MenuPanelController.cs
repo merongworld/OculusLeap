@@ -130,12 +130,15 @@ public class MenuPanelController : MonoBehaviour
         switch (editButton.name)
         {
             case "EditMoveButton":
+                gameController.ActionState = ActionState.Attach;
                 break;
 
             case "EditScaleButton":
+                gameController.ActionState = ActionState.Scale;
                 break;
 
             case "EditDeleteButton":
+                gameController.ActionState = ActionState.Delete;
                 break;
 
             case "EditCloseButton":
