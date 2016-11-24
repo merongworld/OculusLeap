@@ -87,6 +87,7 @@ public class StatePanelController : MonoBehaviour
         UpdateLeapMotionIcon();
         UpdateHandIcons();
         SetHandIconsActive(currentState.device);
+        UpdateTime();
     }
 
     void UpdateLeapMotionIcon()
@@ -227,8 +228,8 @@ public class StatePanelController : MonoBehaviour
         titleText.text = text;
     }
 
-    public void UpdateTimeText(string text)
+    public void UpdateTime()
     {
-        timeText.text = text;
+
     }
 }

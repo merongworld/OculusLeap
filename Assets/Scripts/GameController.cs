@@ -94,6 +94,8 @@ public class GameController : MonoBehaviour
 
     private void UpdateMenuState(MenuState newMenuState)
     {
+        if (newMenuState == menuState) { return; }
+
         switch (menuState)
         {
             case MenuState.Main:
@@ -137,6 +139,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case MenuState.Edit:
+                statePanelController.UpdateTitleText("EDIT BLOCK");
                 break;
         }
 
