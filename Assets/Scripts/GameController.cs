@@ -9,6 +9,20 @@
 using UnityEngine;
 using System.Collections;
 
+public enum BlockType
+{
+    None,
+    Grass,
+    Dirt,
+    Wool,
+    Brick,
+    Bookshelf,
+    Pumpkin,
+    Hay,
+    Chest,
+    Tnt
+}
+
 public enum MenuState
 {
     None,
@@ -22,16 +36,19 @@ public enum ActionState
 {
     None,
     UI,
-    Attach
+    Attach,
+    Move
 }
 
 public class GameController : MonoBehaviour
 {
     private MenuState menuState;
     private ActionState actionState;
+    private BlockType selectedBlockType;
 
-    private bool didMenuChange = false;
-    private float elapsedTime = 0.0f;
+    private bool didMenuChange;
+    private float elapsedTime;
+    private int blockCount;
 
     private Camera mainCamera;
     private StatePanelController statePanelController;
@@ -47,6 +64,12 @@ public class GameController : MonoBehaviour
     void Start()
     {
         menuState = MenuState.None;
+        actionState = ActionState.None;
+        selectedBlockType = BlockType.None;
+
+        didMenuChange = false;
+        elapsedTime = 0.0f;
+        blockCount = 0;
 
         mainCamera = Camera.main;
         statePanelController = FindObjectOfType<StatePanelController>();
@@ -70,12 +93,6 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (actionState)
-        {
-            case ActionState.None:
-                break;
-        }
-
         if (didMenuChange)
         {
             elapsedTime += Time.deltaTime;
@@ -103,8 +120,21 @@ public class GameController : MonoBehaviour
         get { return actionState; }
         set
         {
-            if (actionState != value) { actionState = value; }
+            if (actionState != value) { UpdateActionState(value); }
         }
+    }
+
+    public BlockType SelectedBlockType
+    {
+        get { return selectedBlockType; }
+        set { selectedBlockType = value; }
+    }
+
+
+    public int BlockCount
+    {
+        get { return blockCount; }
+        set { blockCount = (value < 0) ? 0 : value; }
     }
 
     public Camera MainCamera
@@ -114,8 +144,6 @@ public class GameController : MonoBehaviour
 
     private void UpdateMenuState(MenuState newMenuState)
     {
-        if (newMenuState == menuState) { return; }
-
         switch (menuState)
         {
             case MenuState.Main:
@@ -174,6 +202,21 @@ public class GameController : MonoBehaviour
         }
 
         menuState = newMenuState;
+    }
+
+    private void UpdateActionState(ActionState newActionState)
+    {
+        switch (newActionState)
+        {
+            case ActionState.None:
+                break;
+
+            case ActionState.Attach:
+                if (menuState == MenuState.Add) { canvas.SetActive(false); }
+                break;
+        }
+
+        actionState = newActionState;
     }
 
     public void UpdateBackgroundColor(float r, float g, float b)

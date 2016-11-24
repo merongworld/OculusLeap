@@ -131,30 +131,39 @@ public class MenuPanelController : MonoBehaviour
         switch (addBlockButton.name)
         {
             case "AddGrassButton":
+                gameController.SelectedBlockType = BlockType.Grass;
                 break;
 
             case "AddDirtButton":
+                gameController.SelectedBlockType = BlockType.Dirt;
                 break;
 
             case "AddWoolButton":
+                gameController.SelectedBlockType = BlockType.Wool;
                 break;
 
             case "AddBrickButton":
+                gameController.SelectedBlockType = BlockType.Brick;
                 break;
 
             case "AddBookshelfButton":
+                gameController.SelectedBlockType = BlockType.Bookshelf;
                 break;
 
             case "AddPumpkinButton":
+                gameController.SelectedBlockType = BlockType.Pumpkin;
                 break;
 
             case "AddHayButton":
+                gameController.SelectedBlockType = BlockType.Hay;
                 break;
 
             case "AddChestButton":
+                gameController.SelectedBlockType = BlockType.Chest;
                 break;
 
             case "AddTntButton":
+                gameController.SelectedBlockType = BlockType.Tnt;
                 break;
         }
     }
