@@ -7,6 +7,7 @@
 //
 
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public enum PanelState
@@ -72,6 +73,35 @@ public class MenuPanelController : MonoBehaviour
 
             case "SettingsCloseButton":
                 gameController.MenuState = MenuState.None;
+                break;
+        }
+    }
+
+    public void OnSettingsSliderValueChanged(GameObject settingsSlider)
+    {
+        float value;
+        Color color;
+
+        Slider slider = settingsSlider.GetComponent<Slider>();
+
+        switch (settingsSlider.name)
+        {
+            case "SettingsRedSlider":
+                value = slider.value;
+                color = gameController.MainCamera.backgroundColor;
+                gameController.UpdateBackgroundColor(value, color.g, color.b);
+                break;
+
+            case "SettingsGreenSlider":
+                value = slider.value;
+                color = gameController.MainCamera.backgroundColor;
+                gameController.UpdateBackgroundColor(color.r, value, color.b);
+                break;
+
+            case "SettingsBlueSlider":
+                value = slider.value;
+                color = gameController.MainCamera.backgroundColor;
+                gameController.UpdateBackgroundColor(color.r, color.g, value);
                 break;
         }
     }

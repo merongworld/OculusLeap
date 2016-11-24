@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour
 {
     private MenuState menuState;
     private ActionState actionState;
+
+    private Camera mainCamera;
     private StatePanelController statePanelController;
 
     private GameObject canvas;
@@ -37,11 +39,15 @@ public class GameController : MonoBehaviour
     void Start()
     {
         menuState = MenuState.None;
+
+        mainCamera = Camera.main;
         statePanelController = FindObjectOfType<StatePanelController>();
 
         canvas = GameObject.Find("Canvas");
         mainPanel = GameObject.Find("MainPanel");
         settingsPanel = GameObject.Find("SettingsPanel");
+
+        UpdateBackgroundColor(0.125f, 0.125f, 0.125f);
 
         canvas.SetActive(false);
         mainPanel.SetActive(false);
@@ -69,6 +75,11 @@ public class GameController : MonoBehaviour
     public ActionState GetActionState()
     {
         return actionState;
+    }
+
+    public Camera MainCamera
+    {
+        get { return mainCamera; }
     }
 
     private void UpdateMenuState(MenuState newMenuState)
@@ -104,5 +115,10 @@ public class GameController : MonoBehaviour
         }
 
         menuState = newMenuState;
+    }
+
+    public void UpdateBackgroundColor(float r, float g, float b)
+    {
+        mainCamera.backgroundColor = new Color(r, g, b);
     }
 }
