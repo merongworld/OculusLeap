@@ -44,7 +44,9 @@ public class GameController : MonoBehaviour
 {
     private MenuState menuState;
     private ActionState actionState;
+
     private BlockType selectedBlockType;
+    private GameObject selectedBlock;
 
     private bool didMenuChange;
     private float elapsedTime;
@@ -65,7 +67,9 @@ public class GameController : MonoBehaviour
     {
         menuState = MenuState.None;
         actionState = ActionState.None;
+
         selectedBlockType = BlockType.None;
+        selectedBlock = null;
 
         didMenuChange = false;
         elapsedTime = 0.0f;
@@ -130,6 +134,11 @@ public class GameController : MonoBehaviour
         set { selectedBlockType = value; }
     }
 
+    public GameObject SelectedBlock
+    {
+        get { return selectedBlock; }
+        set { selectedBlock = value; }
+    }
 
     public int BlockCount
     {

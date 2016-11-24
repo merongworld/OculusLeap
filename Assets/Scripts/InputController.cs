@@ -28,7 +28,7 @@ public class InputController : MonoBehaviour
     {
         if (leapController.HandState == HandState.Invalid) { return; }
 
-        Debug.Log(gameController.ActionState);
+        // Debug.Log(gameController.ActionState);
         switch (gameController.ActionState)
         {
             case ActionState.None:
@@ -37,6 +37,10 @@ public class InputController : MonoBehaviour
 
             case ActionState.Attach:
                 HandleAttachActionState(gameController.MenuState);
+                break;
+
+            case ActionState.Move:
+                HandleMoveActionState(gameController.MenuState);
                 break;
 
             default:
@@ -93,14 +97,55 @@ public class InputController : MonoBehaviour
                 }
 
                 GameObject block = Instantiate(resource) as GameObject;
+                gameController.SelectedBlock = block;
 
                 Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
                 Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
 
                 block.transform.parent = blocks.transform;
-                block.GetComponent<Transform>().localPosition = palmPosition + palmNormal * 0.1f;
+                block.GetComponent<Transform>().localPosition = palmPosition + palmNormal * 0.08f;
 
                 gameController.ActionState = ActionState.Move;
+            }
+        }
+    }
+
+    private void HandleMoveActionState(MenuState menuState)
+    {
+        Hand leftHand = leapController.LeftHand;
+        Hand rightHand = leapController.RightHand;
+
+        if (menuState == MenuState.Add)
+        {
+            if (leapController.HandState == HandState.None) { return; }
+
+            if (leftHand != null && rightHand != null)
+            {
+                if (leftHand.GrabStrength > 0.9f)
+                {
+                    if (rightHand.GrabStrength < 0.1f)
+                    {
+                        gameController.MenuState = MenuState.None;
+                        gameController.ActionState = ActionState.None;
+                        gameController.SelectedBlockType = BlockType.None;
+                        gameController.SelectedBlock = null;
+
+                        return;
+                    }
+                }
+            }
+
+            if (rightHand != null)
+            {
+                if (rightHand.GrabStrength > 0.9f)
+                {
+                    Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
+                    Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
+
+                    GameObject block = gameController.SelectedBlock;
+                    block.GetComponent<Transform>().localPosition =
+                        Truncate(palmPosition + palmNormal * 0.08f);
+                }
             }
         }
     }
@@ -120,5 +165,14 @@ public class InputController : MonoBehaviour
             case BlockType.Tnt: return "TntBlock";
             default: return null;
         }
+    }
+
+    private Vector3 Truncate(Vector3 vector)
+    {
+        int newX = (int)(vector.x * 20);
+        int newY = (int)(vector.y * 20);
+        int newZ = (int)(vector.z * 20);
+
+        return new Vector3((float)newX / 20, (float)newY / 20, (float)newZ / 20);
     }
 }
