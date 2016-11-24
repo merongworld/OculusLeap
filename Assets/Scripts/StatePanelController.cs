@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using Leap;
 
@@ -230,6 +231,30 @@ public class StatePanelController : MonoBehaviour
 
     public void UpdateTime()
     {
+        DateTime now = DateTime.Now;
+        string timeString = "";
+        bool isAm = true;
 
+        int hour = now.Hour;
+        int minute = now.Minute;
+        int second = now.Second;
+
+        if (hour > 12)
+        {
+            isAm = false;
+            hour -= 12;
+        }
+
+        timeString += now.Year + "-";
+        timeString += now.Month + "-";
+        timeString += now.Day + " ";
+        timeString += ((hour < 10) ? "0" : "") + hour + ":";
+        timeString += ((minute < 10) ? "0" : "") + minute + ":";
+        timeString += ((second < 10) ? "0" : "") + second + " ";
+
+        if (isAm) { timeString += "AM"; }
+        else { timeString += "PM"; }
+
+        timeText.text = timeString;
     }
 }
