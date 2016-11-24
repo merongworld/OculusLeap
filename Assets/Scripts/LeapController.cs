@@ -65,8 +65,6 @@ public class LeapController : MonoBehaviour
         {
             UpdateHandState();
         }
-
-        // Debug.Log(deviceState + " " + handState);
     }
 
     private void UpdateDeviceState()

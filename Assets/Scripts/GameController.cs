@@ -197,7 +197,9 @@ public class GameController : MonoBehaviour
                 break;
 
             case MenuState.Edit:
+                canvas.SetActive(false);
                 statePanelController.UpdateTitleText("EDIT BLOCK");
+                editPanel.SetActive(true);
                 break;
         }
 
@@ -206,6 +208,8 @@ public class GameController : MonoBehaviour
 
     private void UpdateActionState(ActionState newActionState)
     {
+        Debug.Log(newActionState);
+
         switch (newActionState)
         {
             case ActionState.None:

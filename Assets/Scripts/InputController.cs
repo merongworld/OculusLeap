@@ -9,6 +9,7 @@
 using UnityEngine;
 using System.Collections;
 using Leap;
+using Leap.Unity;
 
 public class InputController : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class InputController : MonoBehaviour
     {
         if (leapController.HandState == HandState.Invalid) { return; }
 
+        Debug.Log(gameController.ActionState);
         switch (gameController.ActionState)
         {
             case ActionState.None:
@@ -83,10 +85,20 @@ public class InputController : MonoBehaviour
 
                 Object resource = Resources.Load(resourcePath, typeof(GameObject));
 
-                if (gameController.BlockCount == 0)
+                GameObject blocks = GameObject.Find("Blocks");
+                if (gameController.BlockCount == 0 || blocks == null)
                 {
-
+                    blocks = new GameObject("Blocks");
+                    blocks.transform.SetAsLastSibling();
                 }
+
+                GameObject block = Instantiate(resource) as GameObject;
+
+                Vector3 palmPosition = rightHand.PalmPosition.ToVector3();
+                Vector3 palmNormal = Vector3.Normalize(rightHand.PalmNormal.ToVector3());
+
+                block.transform.parent = blocks.transform;
+                block.GetComponent<Transform>().localPosition = palmPosition + palmNormal * 0.1f;
 
                 gameController.ActionState = ActionState.Move;
             }
