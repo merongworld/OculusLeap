@@ -142,7 +142,7 @@ public class GameController : MonoBehaviour
                 break;
         }
 
-        Debug.Log(ActionState);
+        // Debug.Log(ActionState);
     }
 
     public MenuState MenuState

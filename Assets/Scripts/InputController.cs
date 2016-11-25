@@ -16,11 +16,18 @@ public class InputController : MonoBehaviour
     private GameController gameController;
     private LeapController leapController;
 
+    private bool didEnableScale;
+    private float initialDistance;
+    private Vector3 initialScale;
+
     // Use this for initialization
     void Start()
     {
         gameController = FindObjectOfType<GameController>();
         leapController = FindObjectOfType<LeapController>();
+        didEnableScale = false;
+        initialDistance = 0.0f;
+        initialScale = Vector3.one;
     }
 
     // Update is called once per frame
@@ -45,6 +52,10 @@ public class InputController : MonoBehaviour
 
             case ActionState.Pick:
                 HandlePickActionState(gameController.MenuState);
+                break;
+
+            case ActionState.Scale:
+                HandleScaleActionState(gameController.MenuState);
                 break;
 
             default:
@@ -107,6 +118,10 @@ public class InputController : MonoBehaviour
 
                     gameController.BlockCount += 1;
                 }
+                else if (menuState == MenuState.Edit)
+                {
+                    initialScale = gameController.PickedBlock.transform.localScale;
+                }
 
                 float scale = block.transform.localScale.x;
                 gameController.PickedBlock = block;
@@ -140,6 +155,7 @@ public class InputController : MonoBehaviour
                     {
                         gameController.MenuState = MenuState.None;
                         gameController.ActionState = ActionState.None;
+                        initialScale = Vector3.one;
                         return;
                     }
                 }
@@ -157,12 +173,12 @@ public class InputController : MonoBehaviour
 
                     block.GetComponent<Transform>().localPosition =
                         Truncate(palmPosition + palmNormal * 0.08f * scale);
-                    block.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
+                    block.transform.localScale = initialScale * 0.85f;
                 }
                 else
                 {
                     GameObject block = gameController.PickedBlock;
-                    block.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    block.transform.localScale = initialScale;
                 }
             }
         }
@@ -188,6 +204,46 @@ public class InputController : MonoBehaviour
         }
     }
 
+    private void HandleScaleActionState(MenuState menuState)
+    {
+        Hand leftHand = leapController.LeftHand;
+        Hand rightHand = leapController.RightHand;
+
+        if (leapController.HandState == HandState.None) { return; }
+        else if (leapController.HandState == HandState.Both)
+        {
+            if (leftHand.GrabStrength > 0.9f)
+            {
+                gameController.MenuState = MenuState.None;
+                gameController.ActionState = ActionState.None;
+                didEnableScale = false;
+                initialDistance = 0.0f;
+            }
+            else
+            {
+                if (!didEnableScale)
+                {
+                    didEnableScale = true;
+                    initialDistance = Vector3.Distance(leftHand.PalmPosition.ToVector3(),
+                        rightHand.PalmPosition.ToVector3());
+                    return;
+                }
+
+                float currentDistance = Vector3.Distance(leftHand.PalmPosition.ToVector3(),
+                        rightHand.PalmPosition.ToVector3());
+                currentDistance = Truncate(currentDistance);
+
+                if (currentDistance < initialDistance) { return; }
+                else if (currentDistance > 0.5f) { currentDistance = 0.5f; }
+
+                currentDistance *= 4.0f;
+                gameController.PickedBlock.transform.localScale = new Vector3(
+                        currentDistance, currentDistance, currentDistance
+                    );
+            }
+        }
+    }
+
     private string GetResourcePathFromBlockType(BlockType blockType)
     {
         switch (gameController.PickedBlockType)
@@ -203,6 +259,12 @@ public class InputController : MonoBehaviour
             case BlockType.Tnt: return "TntBlock";
             default: return null;
         }
+    }
+
+    private float Truncate(float value)
+    {
+        int temp = (int)(value * 20);
+        return (float)temp / 20;
     }
 
     private Vector3 Truncate(Vector3 vector)
