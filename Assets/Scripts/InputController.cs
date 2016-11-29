@@ -248,7 +248,7 @@ public class InputController : MonoBehaviour
     {
         switch (gameController.PickedBlockType)
         {
-            case BlockType.Grass: return "BookShelfBlock";
+            case BlockType.Grass: return "GrassBlock";
             case BlockType.Dirt: return "DirtBlock";
             case BlockType.Wool: return "WoolBlock";
             case BlockType.Brick: return "BrickBlock";
